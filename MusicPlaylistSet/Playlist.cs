@@ -8,13 +8,31 @@ namespace MusicPlaylistSet
 {
     class Playlist
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public HashSet<string> Songs { get; set; }
+        public HashSet<Song> Songs { get; set; }
 
-        public Playlist(string name)
+        public Playlist(int id, string name)
         {
+            Id = 0;
             Name = name;
-            Songs = new HashSet<string>();
+            Songs = new HashSet<Song>();
+        }
+
+        public int getSongIndex(int songId)
+        {
+            int index = 1;
+            foreach (Song song in Songs)
+            {
+                if (song.Id == songId)
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
         }
     }
 }

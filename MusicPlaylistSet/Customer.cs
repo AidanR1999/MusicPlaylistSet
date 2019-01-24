@@ -14,7 +14,7 @@ namespace MusicPlaylistSet
         public Customer()
         {
             IsPremium = false;
-            Library = null;
+            Library = new Dictionary<int, Playlist>();
         }
     }
 }

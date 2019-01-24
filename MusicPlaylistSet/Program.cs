@@ -1,7 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +11,7 @@ namespace MusicPlaylistSet
 {
     class Program
     {
-        private static List<string> allSongs;
+        private static List<Song> allSongs;
         private static Customer customer;
 
         static void Main(string[] args)
@@ -29,22 +31,25 @@ namespace MusicPlaylistSet
             using (StreamReader sr = new StreamReader("songTitleDataSet.txt"))
             {
                 string line;
-                allSongs = new List<string>();
+                allSongs = new List<Song>();
+                int id = 1;
 
                 while ((line = sr.ReadLine()) != null)
                 {
-                    allSongs.Add(line);
+                    Song song = new Song(id, "");
+                    song.Name = line;
+
+                    allSongs.Add(song);
+                    id++;
                 }
             }
         }
 
         public static void getSongs()
         {
-            int i = 1;
-            foreach (string song in allSongs)
+            foreach (Song song in allSongs)
             {
-                Console.WriteLine($"{i}. {song}");
-                i++;
+                Console.WriteLine($"{song.Id}. {song.Name}");
             }
 
             addSong();
@@ -53,8 +58,7 @@ namespace MusicPlaylistSet
         public static void addSong()
         {
             int songNum = 0;
-            string[] allSongsArr = allSongs.ToArray();
-            string songName = "";
+            Song songToAdd = new Song(0, "");
 
             string songString = Console.ReadLine();
 
@@ -67,27 +71,43 @@ namespace MusicPlaylistSet
                 Console.WriteLine("Please enter a number");
             }
 
-            for (int i = allSongs.Count; i > 1; i--)
+            foreach (Song song in allSongs)
             {
-                if (songNum == i)
+                if (song.Id == songNum)
                 {
-                    songName = allSongsArr[i - 1];
+                    songToAdd = song;
                 }
             }
 
             if (customer.Library.Count != 0)
             {
                 Console.Clear();
-                Console.WriteLine($"Would you like to add {songName} to one of these playlists:");
+                Console.WriteLine($"Would you like to add {songToAdd.Name} to one of these playlists:");
 
-                showPlaylists();
+                foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
+                {
+                    Console.WriteLine($"{playlist.Key}. {playlist.Value.Name}");
+                }
 
-                string playlistNum = Console.ReadLine();
+                string playlistNumString = Console.ReadLine();
+                int playlistNum = Int32.Parse(playlistNumString);
 
+                foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
+                {
+                    if (playlistNum == playlist.Key)
+                    {
+                        playlist.Value.Songs.Add(songToAdd);
+                        Console.Clear();
+                        MainMenu();
+                        break;
+                    }
+
+                }
             }
             else
             {
-                Console.WriteLine("Create a playlist");
+                Console.Clear();
+                createPlaylist();
             }
         }
 
@@ -135,20 +155,78 @@ namespace MusicPlaylistSet
         private static void showPlaylists()
         {
             int i = 1;
-            foreach (KeyValuePair<string, Playlist> playlist in customer.Library)
+            foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
-                Console.WriteLine($"{i}. {playlist.Key.Name}");
+                Console.WriteLine($"{i}. {playlist.Value.Name}");
                 i++;
+            }
+
+            selectPlaylist();
+        }
+
+        private static void selectPlaylist()
+        {
+            string playlistNumString = Console.ReadLine();
+            int playlistNum = Int32.Parse(playlistNumString);
+
+            foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
+            {
+                if (playlistNum == playlist.Key)
+                {
+                    displayPlaylist(playlist.Value);
+                }
+                else
+                {
+                    Console.WriteLine("Error: playlist does not exist");
+                    selectPlaylist();
+                }
             }
         }
 
+        private static void displayPlaylist(Playlist playlist)
+        {
+            Console.Clear();
+            Console.WriteLine(playlist.Name.ToUpper());
+            Console.WriteLine("0. Back");
+
+            foreach (Song song in playlist.Songs)
+            {
+                Console.WriteLine($"{playlist.getSongIndex(song.Id)}. {song.Name}");
+
+            }
+
+            playlistGetUserChoice(playlist);
+        }
+
+        private static void playlistGetUserChoice(Playlist playlist)
+        {
+            string userChoice = Console.ReadLine();
+            if (userChoice.Equals("0"))
+            {
+                Console.Clear();
+                MainMenu();
+            }
+            else
+            {
+                try
+                {
+                    int songNum = Int32.Parse(userChoice);
+
+                    //playlist.Songs.
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }
         private static void createPlaylist()
         {
             Console.WriteLine("Name: ");
             string name = Console.ReadLine();
-            Playlist playlist = new Playlist(name);
+            Playlist playlist = new Playlist(customer.Library.Count + 1, name);
             
-            customer.Library.Add(playlist, new HashSet<string>());
+            customer.Library.Add(customer.Library.Count + 1, playlist);
 
             Console.Clear();
             MainMenu();
