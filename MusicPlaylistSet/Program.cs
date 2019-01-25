@@ -155,6 +155,7 @@ namespace MusicPlaylistSet
         private static void showPlaylists()
         {
             int i = 1;
+            Console.WriteLine("0. Back to main menu");
             foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
                 Console.WriteLine($"{i}. {playlist.Value.Name}");
@@ -169,13 +170,19 @@ namespace MusicPlaylistSet
             string playlistNumString = Console.ReadLine();
             int playlistNum = Int32.Parse(playlistNumString);
 
+            if (playlistNum == 0)
+            {
+                Console.Clear();
+                MainMenu();
+            }
+
             foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
                 if (playlistNum == playlist.Key)
                 {
                     displayPlaylist(playlist.Value);
                 }
-                else
+                if (playlistNum < playlist.Key)
                 {
                     Console.WriteLine("Error: playlist does not exist");
                     selectPlaylist();
@@ -212,14 +219,57 @@ namespace MusicPlaylistSet
                 {
                     int songNum = Int32.Parse(userChoice);
 
-                    //playlist.Songs.
+                    foreach (Song song in playlist.Songs)
+                    {
+                        if (songNum == playlist.getSongIndex(song.Id))
+                        {
+                            Console.WriteLine($"Would you like to remove {song.Name} from {playlist.Name}?");
+                            removeSongChoice(playlist, songNum);
+                        }
+                        if (songNum < song.Id)
+                        {
+                            Console.WriteLine("Error: Song is not in playlist");
+                            selectPlaylist();
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-
+                    Console.WriteLine("Please enter a whole number");
                 }
             }
         }
+
+        private static void removeSongChoice(Playlist playlist, int songNum)
+        {
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+
+            string userChoice = Console.ReadLine();
+
+            switch (userChoice)
+            {
+                case "1":
+                    removeSongFromPlaylist(playlist, songNum);
+                    break;
+                default:
+                    displayPlaylist(playlist);
+                    break;
+            }
+        }
+
+        private static void removeSongFromPlaylist(Playlist playlist, int songNum)
+        {
+            foreach (Song song in playlist.Songs)
+            {
+                if (songNum == playlist.getSongIndex(song.Id))
+                {
+                    playlist.Songs.Remove(song);
+                    displayPlaylist(playlist);
+                }
+            }
+        }
+
         private static void createPlaylist()
         {
             Console.WriteLine("Name: ");
