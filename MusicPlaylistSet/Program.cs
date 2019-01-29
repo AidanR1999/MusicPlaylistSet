@@ -52,13 +52,12 @@ namespace MusicPlaylistSet
                 Console.WriteLine($"{song.Id}. {song.Name}");
             }
 
-            addSong();
+            getSongToAdd();
         }
 
-        public static void addSong()
+        public static void getSongToAdd()
         {
             int songNum = 0;
-            Song songToAdd = new Song(0, "");
 
             string songString = Console.ReadLine();
 
@@ -75,10 +74,14 @@ namespace MusicPlaylistSet
             {
                 if (song.Id == songNum)
                 {
-                    songToAdd = song;
+                    confirmSongToAdd(song);
+
                 }
             }
+        }
 
+        public static void confirmSongToAdd(Song songToAdd)
+        {
             if (customer.Library.Count != 0)
             {
                 Console.Clear();
@@ -89,20 +92,7 @@ namespace MusicPlaylistSet
                     Console.WriteLine($"{playlist.Key}. {playlist.Value.Name}");
                 }
 
-                string playlistNumString = Console.ReadLine();
-                int playlistNum = Int32.Parse(playlistNumString);
-
-                foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
-                {
-                    if (playlistNum == playlist.Key)
-                    {
-                        playlist.Value.Songs.Add(songToAdd);
-                        Console.Clear();
-                        MainMenu();
-                        break;
-                    }
-
-                }
+                addSongToPlaylist(songToAdd);
             }
             else
             {
@@ -111,9 +101,27 @@ namespace MusicPlaylistSet
             }
         }
 
+        public static void addSongToPlaylist(Song songToAdd)
+        {
+            string playlistNumString = Console.ReadLine();
+            int playlistNum = Int32.Parse(playlistNumString);
+
+            foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
+            {
+                if (playlistNum == playlist.Key)
+                {
+                    playlist.Value.Songs.Add(songToAdd);
+                    Console.Clear();
+                    MainMenu();
+                    break;
+                }
+
+            }
+        }
+
         public static void login()
         {
-            Console.WriteLine("Are you a premuim member?");
+            Console.WriteLine("Are you a premium member?");
             Console.WriteLine("1. Yes");
             Console.WriteLine("2. No");
             string optionString = Console.ReadLine();
@@ -250,7 +258,7 @@ namespace MusicPlaylistSet
             switch (userChoice)
             {
                 case "1":
-                    removeSongFromPlaylist(playlist, songNum);
+                    playlist.removeSongFromPlaylist(songNum);
                     break;
                 default:
                     displayPlaylist(playlist);
@@ -258,7 +266,7 @@ namespace MusicPlaylistSet
             }
         }
 
-        private static void removeSongFromPlaylist(Playlist playlist, int songNum)
+        /*private static void removeSongFromPlaylist(Playlist playlist, int songNum)
         {
             foreach (Song song in playlist.Songs)
             {
@@ -268,7 +276,7 @@ namespace MusicPlaylistSet
                     displayPlaylist(playlist);
                 }
             }
-        }
+        }*/
 
         private static void createPlaylist()
         {

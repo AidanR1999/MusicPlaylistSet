@@ -34,5 +34,16 @@ namespace MusicPlaylistSet
 
             return -1;
         }
+
+        public void removeSongFromPlaylist(int songNum)
+        {
+            foreach (Song song in Songs)
+            {
+                if (songNum == getSongIndex(song.Id))
+                {
+                    Songs.Remove(song);
+                }
+            }
+        }
     }
 }
