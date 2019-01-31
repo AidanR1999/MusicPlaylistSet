@@ -12,11 +12,32 @@ namespace MusicPlaylistSet
         public string Name { get; set; }
         public HashSet<Song> Songs { get; set; }
 
+        public Playlist()
+        {
+            Id = 0;
+            Name = null;
+            Songs = new HashSet<Song>();
+        }
+
+        public Playlist(string name)
+        {
+            Id = 0;
+            Name = name;
+            Songs = new HashSet<Song>();
+        }
+
         public Playlist(int id, string name)
         {
             Id = id;
             Name = name;
             Songs = new HashSet<Song>();
+        }
+
+        public Playlist(int id, string name, HashSet<Song> songs)
+        {
+            Id = id;
+            Name = name;
+            Songs = songs;
         }
 
         public int setSongIndex(int songId)
