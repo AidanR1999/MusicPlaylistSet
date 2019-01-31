@@ -47,6 +47,7 @@ namespace MusicPlaylistSet
 
         public static void getSongs()
         {
+            Console.WriteLine("0. Back");
             foreach (Song song in allSongs)
             {
                 Console.WriteLine($"{song.Id}. {song.Name}");
@@ -58,7 +59,6 @@ namespace MusicPlaylistSet
         public static void getSongToAdd()
         {
             int songNum = 0;
-
             string songString = Console.ReadLine();
 
             try
@@ -70,13 +70,26 @@ namespace MusicPlaylistSet
                 Console.WriteLine("Please enter a number");
             }
 
-            foreach (Song song in allSongs)
+            if (songNum == 0) 
             {
-                if (song.Id == songNum)
+                Console.Clear();
+                MainMenu();
+            }
+            else if (songNum <= allSongs.Count)
+            {
+                foreach (Song song in allSongs)
                 {
-                    confirmSongToAdd(song);
+                    if (song.Id == songNum)
+                    {
+                        confirmSongToAdd(song);
 
+                    }
                 }
+            }
+            else
+            {
+                Console.WriteLine("Song does not exist in current library");
+                getSongToAdd();
             }
         }
 
