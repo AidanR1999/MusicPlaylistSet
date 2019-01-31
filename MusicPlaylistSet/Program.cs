@@ -151,7 +151,6 @@ namespace MusicPlaylistSet
                 case "2":
                     showPlaylists();
                     selectPlaylist();
-
                     break;
                 case "3":
                     getSongs();
@@ -230,12 +229,17 @@ namespace MusicPlaylistSet
 
                     foreach (Song song in playlist.Songs)
                     {
-                        if (songNum == playlist.setSongIndex(song.Id))
+                        if (songNum == playlist.getSongIndex(song))
                         {
                             Console.WriteLine($"Would you like to remove {song.Name} from {playlist.Name}?");
+
                             removeSongChoice(playlist, songNum);
+                            Console.Clear();
+                            showPlaylists();
+                            selectPlaylist();
+                            break;
                         }
-                        if (songNum < song.Id)
+                        else if (songNum > song.Id)
                         {
                             Console.WriteLine("Error: Song is not in playlist");
                             selectPlaylist();
@@ -245,6 +249,7 @@ namespace MusicPlaylistSet
                 catch (Exception e)
                 {
                     Console.WriteLine("Please enter a whole number");
+                    playlistGetSongChoice(playlist);
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace MusicPlaylistSet
 
         public Playlist(int id, string name)
         {
-            Id = 0;
+            Id = id;
             Name = name;
             Songs = new HashSet<Song>();
         }
@@ -59,6 +59,7 @@ namespace MusicPlaylistSet
                 if (songNum == setSongIndex(song.Id))
                 {
                     Songs.Remove(song);
+                    break;
                 }
             }
         }
