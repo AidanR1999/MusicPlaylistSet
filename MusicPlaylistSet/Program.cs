@@ -95,7 +95,7 @@ namespace MusicPlaylistSet
                 addSongToPlaylist(songToAdd);
             }
             else
-            {
+            { 
                 Console.Clear();
                 createPlaylist();
             }
@@ -150,6 +150,8 @@ namespace MusicPlaylistSet
                     break;
                 case "2":
                     showPlaylists();
+                    selectPlaylist();
+
                     break;
                 case "3":
                     getSongs();
@@ -169,8 +171,6 @@ namespace MusicPlaylistSet
                 Console.WriteLine($"{i}. {playlist.Value.Name}");
                 i++;
             }
-
-            selectPlaylist();
         }
 
         private static void selectPlaylist()
@@ -188,7 +188,7 @@ namespace MusicPlaylistSet
             {
                 if (playlistNum == playlist.Key)
                 {
-                    displayPlaylist(playlist.Value);
+                    displaySongsInPlaylist(playlist.Value);
                 }
                 if (playlistNum < playlist.Key)
                 {
@@ -198,7 +198,7 @@ namespace MusicPlaylistSet
             }
         }
 
-        private static void displayPlaylist(Playlist playlist)
+        private static void displaySongsInPlaylist(Playlist playlist)
         {
             Console.Clear();
             Console.WriteLine(playlist.Name.ToUpper());
@@ -206,16 +206,17 @@ namespace MusicPlaylistSet
 
             foreach (Song song in playlist.Songs)
             {
-                Console.WriteLine($"{playlist.getSongIndex(song.Id)}. {song.Name}");
+                Console.WriteLine($"{playlist.setSongIndex(song.Id)}. {song.Name}");
 
             }
 
-            playlistGetUserChoice(playlist);
+            playlistGetSongChoice(playlist);
         }
 
-        private static void playlistGetUserChoice(Playlist playlist)
+        private static void playlistGetSongChoice(Playlist playlist)
         {
             string userChoice = Console.ReadLine();
+
             if (userChoice.Equals("0"))
             {
                 Console.Clear();
@@ -229,7 +230,7 @@ namespace MusicPlaylistSet
 
                     foreach (Song song in playlist.Songs)
                     {
-                        if (songNum == playlist.getSongIndex(song.Id))
+                        if (songNum == playlist.setSongIndex(song.Id))
                         {
                             Console.WriteLine($"Would you like to remove {song.Name} from {playlist.Name}?");
                             removeSongChoice(playlist, songNum);
@@ -261,22 +262,10 @@ namespace MusicPlaylistSet
                     playlist.removeSongFromPlaylist(songNum);
                     break;
                 default:
-                    displayPlaylist(playlist);
+                    displaySongsInPlaylist(playlist);
                     break;
             }
         }
-
-        /*private static void removeSongFromPlaylist(Playlist playlist, int songNum)
-        {
-            foreach (Song song in playlist.Songs)
-            {
-                if (songNum == playlist.getSongIndex(song.Id))
-                {
-                    playlist.Songs.Remove(song);
-                    displayPlaylist(playlist);
-                }
-            }
-        }*/
 
         private static void createPlaylist()
         {

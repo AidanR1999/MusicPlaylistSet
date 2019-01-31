@@ -19,7 +19,7 @@ namespace MusicPlaylistSet
             Songs = new HashSet<Song>();
         }
 
-        public int getSongIndex(int songId)
+        public int setSongIndex(int songId)
         {
             int index = 1;
             foreach (Song song in Songs)
@@ -35,11 +35,28 @@ namespace MusicPlaylistSet
             return -1;
         }
 
+        public int getSongIndex(Song song)
+        {
+            int index = 1;
+
+            foreach (Song songLoop in Songs)
+            {
+                if (song.Id == songLoop.Id)
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
+        }
+
         public void removeSongFromPlaylist(int songNum)
         {
             foreach (Song song in Songs)
             {
-                if (songNum == getSongIndex(song.Id))
+                if (songNum == setSongIndex(song.Id))
                 {
                     Songs.Remove(song);
                 }
