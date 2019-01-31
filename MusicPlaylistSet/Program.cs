@@ -118,17 +118,33 @@ namespace MusicPlaylistSet
         {
             string playlistNumString = Console.ReadLine();
             int playlistNum = Int32.Parse(playlistNumString);
+            int songsInList = 0;
 
             foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
+                songsInList++;
                 if (playlistNum == playlist.Key)
                 {
-                    playlist.Value.Songs.Add(songToAdd);
-                    Console.Clear();
-                    MainMenu();
-                    break;
-                }
+                    if (customer.IsPremium.Equals(false))
+                    {
+                        if (songsInList == 100)
+                        {
+                            Console.WriteLine("Playlist capacity reached. Please upgrade account.");
+                            Console.WriteLine("Press any key to return to the Main Menu.");
+                            Console.ReadKey();
+                            MainMenu();
+                        }
+                    }
+                    else
+                    {
+                        playlist.Value.Songs.Add(songToAdd);
+                        Console.Clear();
+                        MainMenu();
+                        break;
 
+                    }
+                }
+                
             }
         }
 
