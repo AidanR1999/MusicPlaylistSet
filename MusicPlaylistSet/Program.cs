@@ -445,31 +445,45 @@ namespace MusicPlaylistSet
             MainMenu();
         }
 
+        /// <summary>
+        /// Finds all songs two inputted Playlists have in common and returns new Playlist with only matching songs.
+        /// </summary>
+        /// <param name="playlist1">Playlist</param>
+        /// <param name="playlist2">Playlist</param>
+        /// <returns>Playlist intersecting</returns>
         public static Playlist intersectPlaylists(Playlist playlist1, Playlist playlist2)
         {
+            //Local Variables.
             int i = 1;
-
+            Playlist intersecting = new Playlist();
             HashSet<string> a = new HashSet<string>();
+            HashSet<string> b = new HashSet<string>();
+
+            //Adding each Songs name from parameter variable playlist1 into Hashset of strings.
             foreach (Song s in playlist1.Songs)
             {
                 a.Add(s.Name);
             }
 
-            HashSet<string> b = new HashSet<string>();
+            //Adding each Songs name from parameter variable playlist2 into Hashset of strings.
             foreach (Song s in playlist2.Songs)
             {
                 b.Add(s.Name);
             }
 
+            //Refactors local variable a to contain only song names (Strings) that are present in both local Variables a and b.
             a.IntersectWith(b);
 
-            Playlist intersecting = new Playlist();
+            //Loops through every song name (String) in Hashset a.
             foreach (string s in a)
             {
+                //Adds Songs to the HashSet<Songs> in local Variable intersecting using i as Id, and s as Name.
                 intersecting.Songs.Add(new Song(i, s));
+
+                //Increases value of i for next iteration.
                 i++;
             }
-
+            //Returns local variable intersecting of type Playlist.
             return intersecting;
         }
 
