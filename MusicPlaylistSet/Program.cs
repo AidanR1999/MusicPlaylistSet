@@ -530,5 +530,47 @@ namespace MusicPlaylistSet
 
             return a.IsSubsetOf(b);
         }
+
+        private static void playlistCompliment(int selection, Playlist Playlist1, Playlist Playlist2)
+        {
+            HashSet<string> Playlist1Songs = new HashSet<string>();
+            HashSet<string> Playlist2Songs = new HashSet<string>();
+
+            foreach (Song s in Playlist1.Songs)
+            {
+                Playlist1Songs.Add(s.Name);
+            }
+
+            foreach (Song s in Playlist2.Songs)
+            {
+                Playlist2Songs.Add(s.Name);
+            }
+
+            HashSet<string> UniquetoPL = new HashSet<string>();
+
+
+            //Finds Songs in setA which compliment SetB 
+            UniquetoPL = new HashSet<string>(Playlist1Songs.Except(Playlist2Songs));
+
+            Console.WriteLine("These songs are unique to the first playlist: ");
+
+            Console.Write("{");
+            foreach (string s in UniquetoPL)
+            {
+                Console.Write(" {0},", s);
+            }
+            Console.WriteLine(" }");
+
+            //Finds Songs in setB which compliment SetA 
+            UniquetoPL = new HashSet<string>(Playlist2Songs.Except(Playlist1Songs));
+
+            Console.WriteLine("These songs are unique to the second playlist: ");
+            Console.Write("{");
+            foreach (string s in UniquetoPL)
+            {
+                Console.Write(" {0},", s);
+            }
+            Console.WriteLine(" }");
+        }
     }
 }
