@@ -30,7 +30,7 @@ namespace MusicPlaylistSet
         /// <param name="name"></param>
         public Playlist(string name)
         {
-            //Sets Id and Songs to their null values and sets Propertie Name equal to input parameter string name.
+            //Sets Id and Songs to their null values and sets Property Name equal to input parameter string name.
             Id = 0;
             Name = name;
             Songs = new HashSet<Song>();
