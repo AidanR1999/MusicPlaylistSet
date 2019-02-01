@@ -473,26 +473,38 @@ namespace MusicPlaylistSet
             return intersecting;
         }
 
-
+        /// <summary>
+        /// Merges two playlists while deleting duplicates
+        /// </summary>
+        /// <param name="playlist1"></param>
+        /// <param name="playlist2"></param>
+        /// <returns> Playlist unionReturn </returns>
         public static Playlist unionisePlaylists(Playlist playlist1, Playlist playlist2)
         {
             int i = 0;
+            // Create a hashset to store the unionised playlist & set it to hold the first playlist
             HashSet<Song> union = new HashSet<Song>(playlist1.Songs);
 
+            // Merges the union playlist with playlist2 while deleting duplicates
             union.UnionWith(playlist2.Songs);
 
+            // Create a new hashset of strings to hold the song names from the union playlist
             HashSet<string> a = new HashSet<String>();
             foreach (Song s in union)
             {
                 a.Add(s.Name);
             }
 
+            // Create an instance of the playlist class
             Playlist unionReturn = new Playlist();
+
+            // Loop that adds the songs to the playlist 
             foreach (string s in a)
             {
                 unionReturn.Songs.Add(new Song(i, s));
                 i++;
             }
+            // return the merged playlist
             return unionReturn;
         }
 
