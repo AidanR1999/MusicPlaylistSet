@@ -447,54 +447,80 @@ namespace MusicPlaylistSet
             MainMenu();
         }
 
+        /// <summary>
+        /// Finds all songs two inputted Playlists have in common and returns new Playlist with only matching songs.
+        /// </summary>
+        /// <param name="playlist1">Playlist</param>
+        /// <param name="playlist2">Playlist</param>
+        /// <returns>Playlist intersecting</returns>
         public static Playlist intersectPlaylists(Playlist playlist1, Playlist playlist2)
         {
+            //Local Variables.
             int i = 1;
-
+            Playlist intersecting = new Playlist();
             HashSet<string> a = new HashSet<string>();
+            HashSet<string> b = new HashSet<string>();
+
+            //Adding each Songs name from parameter variable playlist1 into Hashset of strings.
             foreach (Song s in playlist1.Songs)
             {
                 a.Add(s.Name);
             }
 
-            HashSet<string> b = new HashSet<string>();
+            //Adding each Songs name from parameter variable playlist2 into Hashset of strings.
             foreach (Song s in playlist2.Songs)
             {
                 b.Add(s.Name);
             }
 
+            //Refactors local variable a to contain only song names (Strings) that are present in both local Variables a and b.
             a.IntersectWith(b);
 
-            Playlist intersecting = new Playlist();
+            //Loops through every song name (String) in Hashset a.
             foreach (string s in a)
             {
+                //Adds Songs to the HashSet<Songs> in local Variable intersecting using i as Id, and s as Name.
                 intersecting.Songs.Add(new Song(i, s));
+
+                //Increases value of i for next iteration.
                 i++;
             }
-
+            //Returns local variable intersecting of type Playlist.
             return intersecting;
         }
 
-
+        /// <summary>
+        /// Merges two playlists while deleting duplicates
+        /// </summary>
+        /// <param name="playlist1"></param>
+        /// <param name="playlist2"></param>
+        /// <returns> Playlist unionReturn </returns>
         public static Playlist unionisePlaylists(Playlist playlist1, Playlist playlist2)
         {
             int i = 0;
+            // Create a hashset to store the unionised playlist & set it to hold the first playlist
             HashSet<Song> union = new HashSet<Song>(playlist1.Songs);
 
+            // Merges the union playlist with playlist2 while deleting duplicates
             union.UnionWith(playlist2.Songs);
 
+            // Create a new hashset of strings to hold the song names from the union playlist
             HashSet<string> a = new HashSet<String>();
             foreach (Song s in union)
             {
                 a.Add(s.Name);
             }
 
+            // Create an instance of the playlist class
             Playlist unionReturn = new Playlist();
+
+            // Loop that adds the songs to the playlist 
             foreach (string s in a)
             {
                 unionReturn.Songs.Add(new Song(i, s));
                 i++;
             }
+            // return the merged playlist
             return unionReturn;
         }
 
