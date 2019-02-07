@@ -245,6 +245,8 @@ namespace MusicPlaylistSet
                     case 2:
                         Console.Clear();
                         showPlaylistsNoExtras();
+                        Console.WriteLine("Select 2 playlists to intersect");
+                        //createPlaylist(playlistCompliment(getPlaylist(), getPlaylist()));
                         break;
                     //intersect
                     case 3:
@@ -531,7 +533,7 @@ namespace MusicPlaylistSet
             return a.IsSubsetOf(b);
         }
 
-        private static void playlistCompliment(int selection, Playlist Playlist1, Playlist Playlist2)
+        private static void playlistCompliment(Playlist Playlist1, Playlist Playlist2)
         {
             HashSet<string> Playlist1Songs = new HashSet<string>();
             HashSet<string> Playlist2Songs = new HashSet<string>();
