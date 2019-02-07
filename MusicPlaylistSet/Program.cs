@@ -17,9 +17,11 @@ namespace MusicPlaylistSet
 
         static void Main(string[] args)
         {
+            //get all the stored songs and create a new customer
             storeSongs();
             customer = new Customer();
 
+            //run the login and main menu methods
             login();
             MainMenu();
 
@@ -27,14 +29,20 @@ namespace MusicPlaylistSet
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// gets all the song names from a text file and assigns them a song id
+        /// </summary>
         public static void storeSongs()
         {
+            //read the song names from the text file in the debug folder
             using (StreamReader sr = new StreamReader("songTitleDataSet.txt"))
             {
+                //add first song to the dictionary of all songs
                 string line;
                 allSongs = new List<Song>();
                 int id = 1;
 
+                //loop the dictionary, added each song and increment the songs id by 1
                 while ((line = sr.ReadLine()) != null)
                 {
                     Song song = new Song(id, "");
@@ -46,6 +54,9 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// get all the songs stored in the dictionary along with its id
+        /// </summary>
         public static void getSongs()
         {
             Console.WriteLine("0. Back");
@@ -57,6 +68,9 @@ namespace MusicPlaylistSet
             getSongToAdd();
         }
 
+        /// <summary>
+        /// gets user input to determine which song they wish to select
+        /// </summary>
         public static void getSongToAdd()
         {
             int songNum = 0;
@@ -71,6 +85,7 @@ namespace MusicPlaylistSet
                 Console.WriteLine("Please enter a number");
             }
 
+            //returns user to the main menu
             if (songNum == 0) 
             {
                 Console.Clear();
@@ -94,6 +109,10 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// gets confirmation from the user that the selected song is to be added to the selected playlist
+        /// </summary>
+        /// <param name="songToAdd"></param>
         public static void confirmSongToAdd(Song songToAdd)
         {
             if (customer.Library.Count != 0)
@@ -101,6 +120,7 @@ namespace MusicPlaylistSet
                 Console.Clear();
                 Console.WriteLine($"Would you like to add {songToAdd.Name} to one of these playlists:");
 
+                //loops through the users stored playlists and displays them for selection to add song too
                 foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
                 {
                     Console.WriteLine($"{playlist.Key}. {playlist.Value.Name}");
@@ -115,6 +135,10 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// will add users selected song to the selected playlist
+        /// </summary>
+        /// <param name="songToAdd"></param>
         public static void addSongToPlaylist(Song songToAdd)
         {
             string playlistNumString = Console.ReadLine();
@@ -122,12 +146,13 @@ namespace MusicPlaylistSet
 
             foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
+                //checks the users selection matches a playlist in the users library
                 if (playlistNum == playlist.Key)
                 {
                     //check the number of songs in the playlist and the status of premium
                     if (playlist.Value.Songs.Count >= 100 && !customer.IsPremium)
                     {
-                        //display message to the user
+                        //if user is not a premium member, notify user they have reached playlist capacity
                         Console.WriteLine("Playlist reached capacity. Please upgrade account.");
                         Console.WriteLine("Press any key to return to the Main Menu.");
                         Console.ReadKey();
@@ -135,6 +160,7 @@ namespace MusicPlaylistSet
                         MainMenu();
                     }
 
+                    //adds song to the playlist(Hashset)
                     playlist.Value.Songs.Add(songToAdd);
                     Console.Clear();
                     MainMenu();
@@ -143,6 +169,9 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// runs a basic log in system for user interaction
+        /// </summary>
         public static void login()
         {
             Console.WriteLine("Are you a premium member?");
@@ -150,12 +179,16 @@ namespace MusicPlaylistSet
             Console.WriteLine("2. No");
             string optionString = Console.ReadLine();
 
+            //sets isPremium bool to true if user selects the related option at the log in menu
             if (optionString.Equals("1"))
                 customer.IsPremium = true;
 
             Console.Clear();
         }
 
+        /// <summary>
+        /// runs a main menu system and runs corresponding method with user input
+        /// </summary>
         public static void MainMenu()
         {
             Console.WriteLine("Enter number to access menu");
@@ -167,6 +200,7 @@ namespace MusicPlaylistSet
 
             Console.Clear();
 
+            //switch statement containing user options
             switch (optionString)
             {
                 case "1":
@@ -185,6 +219,10 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// displays a users collection of playlists with access to the premium features
+        /// this will only show if the user selects that they are a premium user at the main menu
+        /// </summary>
         private static void showPlaylists()
         {
             int i = 1;
@@ -200,6 +238,9 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// shows the users selection of playlists without the premium features
+        /// </summary>
         private static void showPlaylistsNoExtras()
         {
             int i = 1;
@@ -211,6 +252,9 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// gets user input to select a playlist from the users collection
+        /// </summary>
         private static void selectPlaylist()
         {
             string playlistNumString = Console.ReadLine();
@@ -221,6 +265,7 @@ namespace MusicPlaylistSet
                 Console.Clear();
                 MainMenu();
             }
+            //gives premium users access to more powerful playlist tools
             if (playlistNum == customer.Library.Count + 1 && customer.IsPremium)
             {
                 Console.Clear();
@@ -275,6 +320,7 @@ namespace MusicPlaylistSet
                 }
             }
 
+            //displays the songs the playlist contains
             foreach (KeyValuePair<int, Playlist> playlist in customer.Library)
             {
                 if (playlistNum == playlist.Key)
@@ -290,6 +336,10 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// returns the hashset playlist the user has selected from the menu
+        /// </summary>
+        /// <returns>selected playlist</returns>
         private static Playlist getPlaylist()
         {
             string playlistNumString = Console.ReadLine();
@@ -308,6 +358,7 @@ namespace MusicPlaylistSet
                     return playlist.Value;
 
                 }
+                //will display an error message if the user has entered a selection that does not exist
                 if (playlistNum < playlist.Key)
                 {
                     Console.WriteLine("Error: playlist does not exist");
@@ -318,6 +369,10 @@ namespace MusicPlaylistSet
             return null;
         }
 
+        /// <summary>
+        /// prompts the user to select one of the premium playlist options
+        /// </summary>
+        /// <returns>user input</returns>
         private static int getUserChoiceExtraPlaylistOption()
         {
             string userChoiceStr = Console.ReadLine();
@@ -338,6 +393,9 @@ namespace MusicPlaylistSet
             return 0;
         }
 
+        /// <summary>
+        /// displays the premium playlist options
+        /// </summary>
         private static void displayPlaylistExtraOptions()
         {
             Console.WriteLine("0. Back");
@@ -349,6 +407,10 @@ namespace MusicPlaylistSet
 
         }
 
+        /// <summary>
+        /// displays all the songs that are stored in the users selected playlist
+        /// </summary>
+        /// <param name="playlist"></param>
         private static void displaySongsInPlaylist(Playlist playlist)
         {
             Console.Clear();
@@ -364,6 +426,10 @@ namespace MusicPlaylistSet
             playlistGetSongChoice(playlist);
         }
 
+        /// <summary>
+        /// allows the user to remove the corresponding song from the playlist
+        /// </summary>
+        /// <param name="playlist"></param>
         private static void playlistGetSongChoice(Playlist playlist)
         {
             string userChoice = Console.ReadLine();
@@ -406,6 +472,11 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// a confirmation page for song deletion in case of accidental menu selection
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="songNum"></param>
         private static void removeSongChoice(Playlist playlist, int songNum)
         {
             Console.WriteLine("1. Yes");
@@ -424,18 +495,27 @@ namespace MusicPlaylistSet
             }
         }
 
+        /// <summary>
+        /// method creates an empty playlist in the users collection of playlists
+        /// will later allow songs to be added
+        /// </summary>
         private static void createPlaylist()
         {
             Console.WriteLine("Name: ");
             string name = Console.ReadLine();
             Playlist playlist = new Playlist(customer.Library.Count + 1, name);
-            
+
+            //adds the playlist to the users library of playlists
             customer.Library.Add(customer.Library.Count + 1, playlist);
 
             Console.Clear();
             MainMenu();
         }
 
+        /// <summary>
+        /// creates a playlist already populated with songs
+        /// </summary>
+        /// <param name="playlist"></param>
         private static void createPlaylist(Playlist playlist)
         {
             Console.WriteLine("Name: ");
