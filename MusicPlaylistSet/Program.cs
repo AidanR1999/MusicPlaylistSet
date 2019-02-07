@@ -442,6 +442,7 @@ namespace MusicPlaylistSet
             playlist.Name = Console.ReadLine();
 
             customer.Library.Add(customer.Library.Count + 1, playlist);
+            
 
             Console.Clear();
             MainMenu();
